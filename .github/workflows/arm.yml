@@ -60,10 +60,13 @@ jobs:
             curl -fsSL https://deb.nodesource.com/setup_lts.x | bash
             apt-get install -y nodejs
 
+            # Install pnpm globally
+            npm install -g pnpm
+
             # Install frontend dependencies
             pnpm install
 
-            # Build the application
+            # Build the application using Tauri v2
             pnpm run tauri build -- --verbose
 
       - name: Get app version
