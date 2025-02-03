@@ -120,7 +120,7 @@ jobs:
 
       # Build Tauri app for tagged releases
       - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v2
+        uses: tauri-apps/tauri-action@v0
         if: ${{ github.ref_type == 'tag' }}
         env:
           CI: true
