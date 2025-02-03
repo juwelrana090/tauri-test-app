@@ -9,18 +9,27 @@
     "beforeDevCommand": "bun dev",
     "beforeBuildCommand": "bun build"
   },
+  "plugins": {
+    "shell": {},
+    "fs": {}
+  },
   "app": {
     "windows": [
       {
         "title": "my-app",
         "width": 800,
         "height": 600,
+        "minWidth": 360,
+        "minHeight": 480,
         "resizable": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "decorations": true,
+        "visible": true,
+        "alwaysOnTop": true
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; frame-ancestors 'self'"
     }
   },
   "bundle": {
