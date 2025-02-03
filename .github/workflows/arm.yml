@@ -92,4 +92,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: AppImage Bundle
+<<<<<<< HEAD
           path: ${{ github.workspace }}/src-tauri/target/release/bundle/appimage/appname_${{ env.APP_VERSION }}_${{ matrix.appimage }}.AppImage
+=======
+          path: ${{ github.workspace }}/src-tauri/target/release/bundle/appimage/appname_${{ env.APP_VERSION }}_${{ matrix.appimage }}.AppImage
+>>>>>>> b6c6a7e24694c5bcac5592cd7d7aeb96e34605e3
