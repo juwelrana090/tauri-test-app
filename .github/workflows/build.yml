@@ -70,18 +70,18 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt update
-          xargs sudo apt install -y < environment/apt_packages.txt
+          sudo apt install -y curl libwebkit2gtk-4.1-dev build-essential libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf libfuse2 file
 
       - name: Install macOS dependencies
         if: matrix.platform == 'macos-latest'
         run: |
           brew update
-          brew install <package-name>
+          brew install curl libwebkit2gtk build-essential libssl libgtk-3 librsvg patchelf
 
       - name: Install Windows dependencies
         if: matrix.platform == 'windows-latest'
         run: |
-          choco install <package-name>
+          choco install curl libwebkit2gtk build-essential libssl libgtk-3 librsvg patchelf
 
       # CI Build
       - name: CI Build
