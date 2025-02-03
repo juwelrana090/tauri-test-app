@@ -3,6 +3,13 @@
   "identifier": "default",
   "description": "enables the default permissions",
   "windows": ["main"],
+  "build": {
+    "signing": {
+      "identity": {
+        "publicKey": "../public_key.pem"
+      }
+    }
+  },
   "permissions": [
     "core:default",
     "store:default",
@@ -55,6 +62,11 @@
       ]
     },
     "shell:allow-open",
-    "shell:default"
+    "shell:default",
+    "updater:default",
+    "updater:allow-check",
+    "updater:allow-download",
+    "updater:allow-install",
+    "updater:allow-download-and-install"
   ]
 }

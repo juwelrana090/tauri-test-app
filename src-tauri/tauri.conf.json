@@ -14,11 +14,12 @@
     "shell": {},
     "fs": {},
     "updater": {
-      "pubkey": "CONTENT FROM PUBLICKEY.PEM",
+      "active": true,
       "endpoints": [
-        "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}",
         "https://github.com/juwelrana090/tauri-test-app/releases/latest/download/latest.json"
-      ]
+      ],
+      "dialog": true,
+      "pubkey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyYABH+sljM9KZ7FUeDPkRNUw60Fp+qvbXJtWqicIMiIlXiVfaqJKgydlfeH/rL942/lQaqoIzwoQqT3wCtNY6BJ08UcROnE1EenpyCJCEzpKyKwe3XibU5Us15ZIyoA4UWuGGFm5a9J1187bZSzkvxva29FN8ZuYcOeyrzUrhhYfQtWs/Fq1CkBeOWWX38Ksx1g5xL5XeQNLe42YM8QcDfTA6Kkztz9lBFBJVhVaUf+P0t3XXxohXr4hv6DAipA4WZbV72JAQjk1JX/5e8FLR6/OVRwxjWIFRUDXBbSigzt1YSym2sv6wjaoGqXHn9qkxAbKe45GSIAEWu2MnkITQwIDAQAB"
     }
   },
   "app": {
