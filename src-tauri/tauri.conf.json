@@ -1,7 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "my-app",
-  "version": "0.1.0",
+  "mainBinaryName": "my-app",
+  "version": "../package.json",
   "identifier": "com.hellobarc.dev",
   "build": {
     "frontendDist": "../out",
