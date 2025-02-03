@@ -19,8 +19,9 @@
         "https://github.com/juwelrana090/tauri-test-app/releases/latest/download/latest.json"
       ],
       "dialog": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEM1NTJFMkREQ0EyNkQ0MTAKUldRUTFDYkszZUpTeFhBb2dFNUU1Y1Z2dkNud3BHL0FqK3dHVzhnMWpIK2NuUVd5WGpPZUdiR1oK"
-    }
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IERFMkI1OEREREFENzlFRTAKUldUZ250ZmEzVmdyM3VHTHYrZzMxQWJSM014cWd0M1VkcjVDSTRxTFNQMWZvVXc2YkN3Ky9rOEcK"
+    },
+    "process":{}
   },
   "app": {
     "windows": [

@@ -67,6 +67,9 @@
     "updater:allow-check",
     "updater:allow-download",
     "updater:allow-install",
-    "updater:allow-download-and-install"
+    "updater:allow-download-and-install",
+    "process:default",
+    "process:allow-exit",
+    "process:allow-restart"
   ]
 }
