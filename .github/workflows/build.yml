@@ -3,9 +3,9 @@ name: Publish Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
     branches:
-      - '*'
+      - "*"
   workflow_dispatch:
 
 env:
@@ -31,14 +31,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest' # for Arm-based macs (M1 and above)
-            args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest' # for Intel-based macs
-            args: '--target x86_64-apple-darwin'
-          - platform: 'ubuntu-latest'
-            args: ''
-          - platform: 'windows-latest'
-            args: ''
+          - platform: "macos-latest" # for Arm-based macs (M1 and above)
+            args: "--target aarch64-apple-darwin"
+          - platform: "macos-latest" # for Intel-based macs
+            args: "--target x86_64-apple-darwin"
+          - platform: "ubuntu-latest"
+            args: ""
+          - platform: "windows-latest"
+            args: ""
     runs-on: ${{ matrix.platform }}
     needs: [changelog]
     steps:
@@ -48,7 +48,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
 
       - name: Install dependencies
         run: |
@@ -66,7 +66,7 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: './src-tauri -> target'
+          workspaces: "./src-tauri -> target"
 
       - name: Install macOS dependencies
         if: matrix.platform == 'macos-latest'
@@ -75,15 +75,28 @@ jobs:
           brew install libwebsockets
 
       - name: Install Ubuntu dependencies
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-22.04'
         run: |
-          sudo apt update
-          sudo apt install -y libwebsockets-dev
+          sudo apt-get update && sudo apt-get install -y \
+          curl \
+          wget \
+          libwebkit2gtk-4.1-dev \
+          libappindicator3-dev \
+          librsvg2-dev \
+          patchelf \
+          libgtk-3-dev \
+          libglib2.0-dev \
+          libayatana-appindicator3-dev \
+          pkg-config \
+          build-essential \
+          cmake
 
       - name: Install Windows dependencies
         if: matrix.platform == 'windows-latest'
         run: |
-          choco install libwebsockets --pre || echo "libwebsockets installation failed"
+          choco install -y visualstudio2022buildtools windows-sdk-10 cmake
+          choco install -y mingw ninja
+          rustup target add x86_64-pc-windows-msvc
 
       - name: CI Build
         if: ${{ github.ref_type == 'branch' }}
