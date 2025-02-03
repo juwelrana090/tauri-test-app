@@ -1,4 +1,5 @@
 name: Publish Release
+
 on:
   push:
     tags:
@@ -21,7 +22,7 @@ jobs:
         id: build_changelog
         run: |
           PREV_TAG=$(git tag --list v* | tail -n2 | head -n1)
-          echo "changelog=$(git log $PREV_TAG...${{ github.ref_name }} --pretty=format:"- %s")" >> $GITHUB_OUTPUT
+          echo "changelog=$(git log $PREV_TAG...${{ github.ref_name }} --pretty=format:'- %s')" >> $GITHUB_ENV
     outputs:
       changelog: ${{ steps.build_changelog.outputs.changelog }}
 
@@ -30,9 +31,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest' # for Arm based macs (M1 and above).
+          - platform: 'macos-latest' # for Arm-based macs (M1 and above)
             args: '--target aarch64-apple-darwin'
-          - platform: 'macos-latest' # for Intel based macs.
+          - platform: 'macos-latest' # for Intel-based macs
             args: '--target x86_64-apple-darwin'
           - platform: 'ubuntu-latest'
             args: ''
@@ -58,6 +59,10 @@ jobs:
         with:
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
+      - name: Install Tauri CLI
+        run: |
+          npm install @tauri-apps/cli
+
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
@@ -73,12 +78,12 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt update
-          sudo apt install libwebsockets
+          sudo apt install -y libwebsockets-dev
 
       - name: Install Windows dependencies
         if: matrix.platform == 'windows-latest'
         run: |
-          choco install libwebsockets
+          choco install libwebsockets --pre || echo "libwebsockets installation failed"
 
       - name: CI Build
         if: ${{ github.ref_type == 'branch' }}
@@ -90,14 +95,14 @@ jobs:
         if: ${{ github.ref_type == 'tag' }}
         env:
           CI: true
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ github.ref_name }}
           releaseName: "${{ env.APP_NAME }} v__VERSION__"
           releaseBody: |
-            ${{needs.changelog.outputs.changelog}}
+            ${{ needs.changelog.outputs.changelog }}
             See the assets to download this version and install.
           releaseDraft: true
           prerelease: false
