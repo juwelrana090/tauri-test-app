@@ -66,6 +66,7 @@ jobs:
           RELEASE=$(gh release view $TAG_NAME --json name -q ".name" || echo "null")
 
           if [ "$RELEASE" = "null" ]; then
+            # Create the release and upload all artifacts at once
             gh release create $TAG_NAME \
               src-tauri/target/release/bundle/deb/appname_${{ env.APP_VERSION }}_${{ matrix.deb }}.deb \
               src-tauri/target/release/bundle/rpm/appname-${{ env.APP_VERSION }}-1.${{ matrix.rpm }}.rpm \
@@ -92,8 +93,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: AppImage Bundle
-<<<<<<< HEAD
           path: ${{ github.workspace }}/src-tauri/target/release/bundle/appimage/appname_${{ env.APP_VERSION }}_${{ matrix.appimage }}.AppImage
-=======
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/appimage/appname_${{ env.APP_VERSION }}_${{ matrix.appimage }}.AppImage
->>>>>>> b6c6a7e24694c5bcac5592cd7d7aeb96e34605e3
