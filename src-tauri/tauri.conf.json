@@ -12,7 +12,14 @@
   },
   "plugins": {
     "shell": {},
-    "fs": {}
+    "fs": {},
+    "updater": {
+      "pubkey": "CONTENT FROM PUBLICKEY.PEM",
+      "endpoints": [
+        "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}",
+        "https://github.com/juwelrana090/tauri-test-app/releases/latest/download/latest.json"
+      ]
+    }
   },
   "app": {
     "windows": [
@@ -36,6 +43,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": true,
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

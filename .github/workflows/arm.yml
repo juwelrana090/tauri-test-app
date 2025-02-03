@@ -67,9 +67,9 @@ jobs:
 
           if [ "$RELEASE" = "null" ]; then
             gh release create $TAG_NAME \
-              src-tauri/target/release/bundle/deb/my-app_${{ env.APP_VERSION }}_${{ matrix.deb }}.deb \
-              src-tauri/target/release/bundle/rpm/my-app-${{ env.APP_VERSION }}-1.${{ matrix.rpm }}.rpm \
-              src-tauri/target/release/bundle/appimage/my-app_${{ env.APP_VERSION }}_${{ matrix.appimage }}.AppImage \
+              src-tauri/target/release/bundle/deb/appname_${{ env.APP_VERSION }}_${{ matrix.deb }}.deb \
+              src-tauri/target/release/bundle/rpm/appname-${{ env.APP_VERSION }}-1.${{ matrix.rpm }}.rpm \
+              src-tauri/target/release/bundle/appimage/appname_${{ env.APP_VERSION }}_${{ matrix.appimage }}.AppImage \
               --title "$RELEASE_NAME" \
               --notes "$BODY"
           else
@@ -80,16 +80,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Debian Bundle
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/deb/my-app_${{ env.APP_VERSION }}_${{ matrix.deb }}.deb
+          path: ${{ github.workspace }}/src-tauri/target/release/bundle/deb/appname_${{ env.APP_VERSION }}_${{ matrix.deb }}.deb
 
       - name: Upload RPM bundle
         uses: actions/upload-artifact@v4
         with:
           name: RPM Bundle
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/rpm/my-app-${{ env.APP_VERSION }}-1.${{ matrix.rpm }}.rpm
+          path: ${{ github.workspace }}/src-tauri/target/release/bundle/rpm/appname-${{ env.APP_VERSION }}-1.${{ matrix.rpm }}.rpm
 
       - name: Upload AppImage bundle
         uses: actions/upload-artifact@v4
         with:
           name: AppImage Bundle
-          path: ${{ github.workspace }}/src-tauri/target/release/bundle/appimage/my-app_${{ env.APP_VERSION }}_${{ matrix.appimage }}.AppImage
+          path: ${{ github.workspace }}/src-tauri/target/release/bundle/appimage/appname_${{ env.APP_VERSION }}_${{ matrix.appimage }}.AppImage
