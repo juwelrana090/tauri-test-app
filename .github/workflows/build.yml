@@ -26,6 +26,7 @@ jobs:
           echo "changelog=$(git log $PREV_TAG...${{ github.ref_name }} --pretty=format:"- %s")" >> $GITHUB_OUTPUT
     outputs:
       changelog: ${{ steps.build_changelog.outputs.changelog }}
+
   release:
     strategy:
       fail-fast: false
@@ -53,16 +54,13 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
-        # NOTE: enterprise developers may hard code a version
         with:
           node-version: 'lts/*'
           cache: pnpm
-          # node-version-file: '.nvmrc'
 
       - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable # Set this to dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@stable
         with:
-          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
           targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
       - name: Rust cache
@@ -70,11 +68,23 @@ jobs:
         with:
           workspaces: './src-tauri -> target'
 
+      # Install platform-specific dependencies
       - name: Install Ubuntu dependencies
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt update
           xargs sudo apt install -y < environment/apt_packages.txt
+
+      - name: Install macOS dependencies
+        if: matrix.platform == 'macos-latest'
+        run: |
+          brew update
+          brew install <package-name>
+
+      - name: Install Windows dependencies
+        if: matrix.platform == 'windows-latest'
+        run: |
+          choco install <package-name>
 
       - name: Install frontend dependencies
         run: |
@@ -86,7 +96,7 @@ jobs:
           pnpm rls
 
       - name: CI upload Windows
-        if: ${{ github.ref_type == 'branch' && matrix.platform == 'windows-latest' }}
+        if: ${{ (github.ref_type == 'branch' || github.ref_type == 'tag') && matrix.platform == 'windows-latest' }}
         uses: actions/upload-artifact@v4
         with:
           name: 'Windows Installers'
@@ -95,7 +105,7 @@ jobs:
             src-tauri/release/bundle/nsis/*.exe
 
       - name: CI upload macOS
-        if: ${{ github.ref_type == 'branch' && matrix.platform == 'macos-latest' }}
+        if: ${{ (github.ref_type == 'branch' || github.ref_type == 'tag') && matrix.platform == 'macos-latest' }}
         uses: actions/upload-artifact@v4
         with:
           name: 'macOS Installer'
@@ -103,7 +113,7 @@ jobs:
             src-tauri/release/bundle/dmg/*.dmg
 
       - name: CI upload Linux
-        if: ${{ github.ref_type == 'branch' && matrix.platform == 'ubuntu-latest' }}
+        if: ${{ (github.ref_type == 'branch' || github.ref_type == 'tag') && matrix.platform == 'ubuntu-latest' }}
         uses: actions/upload-artifact@v4
         with:
           name: 'Linux Distributions'
@@ -111,12 +121,10 @@ jobs:
             src-tauri/target/release/bundle/deb/*.deb
             src-tauri/target/release/bundle/AppImage/*.AppImage
 
-      # TODO: https://tauri.app/v1/guides/building/linux#cross-compiling-tauri-applications-for-arm-based-devices
+      # Build Tauri app for tagged releases
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0
         if: ${{ github.ref_type == 'tag' }}
-        # if u get Error: Resource not accessible by integration
-        # go to repository Settings => Action => General => Workflow permissions => Switch to Read and Write permisions
         env:
           CI: true
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
