@@ -44,13 +44,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Build the changelog based on the commit messages between the versioned tags
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
 
-      # Install dependencies
       - name: Install dependencies
         run: |
           npm install
@@ -65,60 +63,28 @@ jobs:
         with:
           workspaces: './src-tauri -> target'
 
-      # Install platform-specific dependencies
-      - name: Install Ubuntu dependencies
-        if: matrix.platform == 'ubuntu-latest'
-        run: |
-          sudo apt update
-          sudo apt install -y curl libwebkit2gtk-4.1-dev build-essential libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf libfuse2 file
-
       - name: Install macOS dependencies
         if: matrix.platform == 'macos-latest'
         run: |
           brew update
-          brew install curl libwebkit2gtk build-essential libssl libgtk-3 librsvg patchelf
+          brew install libwebsockets
+
+      - name: Install Ubuntu dependencies
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt update
+          sudo apt install libwebsockets
 
       - name: Install Windows dependencies
         if: matrix.platform == 'windows-latest'
         run: |
-          choco install curl libwebkit2gtk build-essential libssl libgtk-3 librsvg patchelf
+          choco install libwebsockets
 
-      # CI Build
       - name: CI Build
         if: ${{ github.ref_type == 'branch' }}
         run: |
           npm run tauri build
 
-      # CI upload Windows
-      - name: CI upload Windows
-        if: ${{ (github.ref_type == 'branch' || github.ref_type == 'tag') && matrix.platform == 'windows-latest' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'Windows Installers'
-          path: |
-            src-tauri/release/bundle/msi/*.msi
-            src-tauri/release/bundle/nsis/*.exe
-
-      # CI upload macOS
-      - name: CI upload macOS
-        if: ${{ (github.ref_type == 'branch' || github.ref_type == 'tag') && matrix.platform == 'macos-latest' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'macOS Installer'
-          path: |
-            src-tauri/release/bundle/dmg/*.dmg
-
-      # CI upload Linux
-      - name: CI upload Linux
-        if: ${{ (github.ref_type == 'branch' || github.ref_type == 'tag') && matrix.platform == 'ubuntu-latest' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'Linux Distributions'
-          path: |
-            src-tauri/target/release/bundle/deb/*.deb
-            src-tauri/target/release/bundle/AppImage/*.AppImage
-
-      # Build Tauri app for tagged releases
       - name: Build Tauri app
         uses: tauri-apps/tauri-action@v0
         if: ${{ github.ref_type == 'tag' }}
