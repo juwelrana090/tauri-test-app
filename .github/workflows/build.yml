@@ -3,7 +3,8 @@ on:
   push:
     tags:
       - 'v*'
-    branches: '*'
+    branches:
+      - '*'
   workflow_dispatch:
 
 env:
@@ -19,9 +20,6 @@ jobs:
       - name: Build changelog
         id: build_changelog
         run: |
-          # NOTE: if commits subjects are standardized, you can filter the git log based on feat: and fix:
-          # and then replace "feat:" with "New: " and "fix:" with "Fixed "
-          # when AI gets good, we can also summarized commits into a bullet point list
           PREV_TAG=$(git tag --list v* | tail -n2 | head -n1)
           echo "changelog=$(git log $PREV_TAG...${{ github.ref_name }} --pretty=format:"- %s")" >> $GITHUB_OUTPUT
     outputs:
@@ -46,17 +44,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # build the changelog based on the commit messages between the versioned tags
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
+      # Build the changelog based on the commit messages between the versioned tags
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          cache: pnpm
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -86,15 +83,13 @@ jobs:
         run: |
           choco install <package-name>
 
-      - name: Install frontend dependencies
-        run: |
-          pnpm install
-
+      # CI Build
       - name: CI Build
         if: ${{ github.ref_type == 'branch' }}
         run: |
-          pnpm rls
+          npm run tauri build
 
+      # CI upload Windows
       - name: CI upload Windows
         if: ${{ (github.ref_type == 'branch' || github.ref_type == 'tag') && matrix.platform == 'windows-latest' }}
         uses: actions/upload-artifact@v4
@@ -104,6 +99,7 @@ jobs:
             src-tauri/release/bundle/msi/*.msi
             src-tauri/release/bundle/nsis/*.exe
 
+      # CI upload macOS
       - name: CI upload macOS
         if: ${{ (github.ref_type == 'branch' || github.ref_type == 'tag') && matrix.platform == 'macos-latest' }}
         uses: actions/upload-artifact@v4
@@ -112,6 +108,7 @@ jobs:
           path: |
             src-tauri/release/bundle/dmg/*.dmg
 
+      # CI upload Linux
       - name: CI upload Linux
         if: ${{ (github.ref_type == 'branch' || github.ref_type == 'tag') && matrix.platform == 'ubuntu-latest' }}
         uses: actions/upload-artifact@v4
@@ -123,7 +120,7 @@ jobs:
 
       # Build Tauri app for tagged releases
       - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v2
         if: ${{ github.ref_type == 'tag' }}
         env:
           CI: true

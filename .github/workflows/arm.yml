@@ -1,4 +1,4 @@
-name: 'Publish Linux Arm builds'
+name: 'Publish Linux ARM Builds'
 
 on:
   workflow_dispatch:
@@ -60,14 +60,11 @@ jobs:
             curl -fsSL https://deb.nodesource.com/setup_lts.x | bash
             apt-get install -y nodejs
 
-            # Install pnpm globally
-            npm install -g pnpm
-
-            # Install frontend dependencies
-            pnpm install
+            # Install frontend dependencies using npm
+            npm install
 
             # Build the application using Tauri v2
-            pnpm run tauri build -- --verbose
+            npm run tauri build -- --verbose
 
       - name: Get app version
         run: echo "APP_VERSION=$(jq -r .version src-tauri/tauri.conf.json)" >> $GITHUB_ENV
