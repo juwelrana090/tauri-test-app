@@ -123,7 +123,7 @@ jobs:
 
       # Build Tauri app for tagged releases
       - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v1  # Update to the latest version if possible
         if: ${{ github.ref_type == 'tag' }}
         env:
           CI: true
@@ -131,11 +131,10 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          # tauri-action replaces \_\_VERSION\_\_ with the app version
           tagName: ${{ github.ref_name }}
           releaseName: "${{ env.APP_NAME }} v__VERSION__"
           releaseBody: |
-            ${{needs.changelog.outputs.changelog}}
+            ${{ needs.changelog.outputs.changelog }}
             See the assets to download this version and install.
           releaseDraft: true
           prerelease: false
