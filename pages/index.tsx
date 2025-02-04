@@ -1,7 +1,10 @@
+'use client';
+
 import React, { useState } from "react";
 import { writeTextFile, BaseDirectory } from "@tauri-apps/plugin-fs";
 import { downloadDir } from "@tauri-apps/api/path";
-import { open } from "@tauri-apps/plugin-shell"; 
+import { open } from "@tauri-apps/plugin-shell";
+import Link from "next/link";
 
 const HomePage = () => {
   const [name, setName] = useState("");
@@ -10,9 +13,11 @@ const HomePage = () => {
     if (!name) return;
     const downloadDirPath = await downloadDir();
     const filePath = `${downloadDirPath}/hello.txt`;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    await writeTextFile(filePath, `Hello, ${name}!`, { dir: BaseDirectory.Download });
+    await writeTextFile(filePath, `Hello, ${name}!`, {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      dir: BaseDirectory.Download,
+    });
     await open(downloadDirPath);
   };
 
@@ -46,7 +51,11 @@ const HomePage = () => {
           Save
         </button>
       </div>
-      <div className="w-full"></div>
+      <div className="w-full">
+        <Link href="/editor">
+          <button>Editor</button>
+        </Link>
+      </div>
       <div className="w-full"></div>
     </div>
   );

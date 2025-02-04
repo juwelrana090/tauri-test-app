@@ -61,6 +61,7 @@
         }
       ]
     },
+    "fs:default",
     "shell:allow-open",
     "shell:default",
     "updater:default",
@@ -70,6 +71,12 @@
     "updater:allow-download-and-install",
     "process:default",
     "process:allow-exit",
-    "process:allow-restart"
+    "process:allow-restart",
+    "dialog:default",
+    "dialog:allow-ask",
+    "dialog:allow-confirm",
+    "dialog:allow-message",
+    "dialog:allow-save",
+    "dialog:allow-open"
   ]
 }

@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  .editor-button {
+    @apply px-4 py-2 bg-blue-500 text-white rounded cursor-pointer transition duration-300 ease-in-out hover:bg-blue-600;
+  }
+
+  .editor-button:active {
+    @apply bg-blue-700;
+  }
+
+  .editor-button:disabled {
+    @apply bg-gray-500 cursor-not-allowed;
+  }
+}
